@@ -22,7 +22,7 @@ Scrapper = function () {
         return body;
     };
 
-    this.executeScrapper = async function (word, _cb) {
+    this.executeScrapper = async function (word, type, _cb) {
         let urlToScrap =
             keys.JDMServerPref + word + keys.JDMServerSufx + word + "&rel=";
 
@@ -53,11 +53,12 @@ Scrapper = function () {
                 }
             });
 
-            this.scrapAllInfo(code, wordObject);
+            // this line to scrap all infos relations and entities...
+            //this.scrapAllInfo(code, wordObject);
             if (wordObject.r_raff_sem.length == 0)
                 await this.scrapRelationType(word, wordObject, 1, false);
 
-            await this.scrapRelationType(word, wordObject, 0, false);
+            await this.scrapRelationType(word, wordObject, type, false);
 
             db.save(wordObject);
 

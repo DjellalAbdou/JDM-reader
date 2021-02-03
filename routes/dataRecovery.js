@@ -13,7 +13,7 @@ module.exports = (app, scrapper, linker) => {
             if (result != null) {
                 res.send(await deleteUnnecessaryKeys(result, type));
             } else {
-                scrapper.executeScrapper(word, async (result) => {
+                scrapper.executeScrapper(word, type, async (result) => {
                     res.send(await deleteUnnecessaryKeys(result, type));
                 });
             }
