@@ -4,6 +4,8 @@ const Iconv = require("iconv").Iconv;
 const keys = require("../config/keys");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const db = require("../db");
+const relationId = require("../assets/id_relation.json");
 
 Scrapper = function () {
     this.convertToUtf8 = function (rawData) {
@@ -39,6 +41,7 @@ Scrapper = function () {
                 word: word,
                 eid: Number(code.split("(eid=")[1].split(")")[0]),
                 def: [],
+                r_raff_sem: [],
                 nodes: [],
                 relations: [],
             };
@@ -51,12 +54,68 @@ Scrapper = function () {
             });
 
             this.scrapAllInfo(code, wordObject);
+            if (wordObject.r_raff_sem.length == 0)
+                await this.scrapRelationType(word, wordObject, 1, false);
+
+            await this.scrapRelationType(word, wordObject, 0, false);
+
+            db.save(wordObject);
 
             _cb(wordObject);
         } catch (err) {
             console.log(err);
             _cb({ error: true, obj: err });
         }
+    };
+
+    this.scrapRelationType = function (word, wordObject, type, updateDB, _cb) {
+        return new Promise(async (resolve, reject) => {
+            let urlToScrap =
+                keys.JDMServerPref +
+                word +
+                keys.JDMServerSufx +
+                word +
+                "&rel=" +
+                type;
+
+            try {
+                let rawData = await axios.get(urlToScrap, {
+                    responseEncoding: "binary",
+                });
+                let data = rawData.data;
+                let $ = cheerio.load(data);
+                let code = $("CODE").text();
+                data = this.convertToUtf8(rawData);
+
+                let codeArr = code.match(/(e;[0-9]+;.*)/gm);
+
+                if (codeArr != null) {
+                    codeArr.map((raf) => {
+                        //console.log(raf);
+                        let rafData = raf.split(";");
+                        let rafObj = {
+                            w: rafData[4],
+                            word: rafData[5] ? rafData[5] : rafData[2],
+                        };
+                        if (wordObject[relationId[type]] === undefined)
+                            wordObject[relationId[type]] = [];
+                        wordObject[relationId[type]].push(rafObj);
+                    });
+                }
+                if (updateDB) {
+                    db.updateWord(
+                        word,
+                        relationId[type],
+                        wordObject[relationId[type]],
+                        _cb
+                    );
+                }
+                resolve();
+            } catch (err) {
+                console.log(err);
+                reject();
+            }
+        });
     };
 
     this.scrapAllInfo = function (code, wordObject) {
@@ -103,7 +162,8 @@ Scrapper = function () {
 
     this.scrapRelationsType = function (code, wordObject) {
         const regex = /(rt;[0-9]+;.*)/gm;
-        code.match(regex).map((relation) => {
+        let relationTypes = code.match(regex);
+        relationTypes.map((relation) => {
             let relationArr = relation.split(";");
             wordObject.relations.push({
                 rt: relationArr[0],
@@ -112,8 +172,14 @@ Scrapper = function () {
                 rtgpname: relationArr[3],
                 rthelp: relationArr.length === 5 ? relationArr[4] : "",
             });
+            //this.createRelationTypeMapping(code,relationArr[2],wordObject);
         });
     };
+
+    /*this.createRelationTypeMapping = function(code, rtname,wordObject){
+        const eRegex = /(e;[0-9]+;.*)/gm;
+        const rRegex = new RegExp("r;[0-9]+;" + wordObject.eid + ".*", "gm");
+    }*/
 
     this.scrapOutgoingRelation = function (code, wordObject) {
         const regex = new RegExp("r;[0-9]+;" + wordObject.eid + ".*", "gm");
@@ -133,6 +199,22 @@ Scrapper = function () {
                             type: relationArr[4],
                             w: relationArr[5],
                         });
+                        if (relation.rtid == "1") {
+                            wordObject.nodes.map((node) => {
+                                for (let i = 0; i < node.entries.length; i++) {
+                                    if (relationArr[3] == node.entries[i].eid) {
+                                        let rafName =
+                                            node.entries[i].formatted_name;
+                                        if (rafName.includes(">")) {
+                                            wordObject.r_raff_sem.push(
+                                                rafName.replaceAll("'", "")
+                                            );
+                                        }
+                                        break;
+                                    }
+                                }
+                            });
+                        }
                     }
                 });
             });
