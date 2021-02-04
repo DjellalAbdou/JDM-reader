@@ -1,0 +1,29 @@
+{
+    "name": "jdmserver",
+    "version": "1.1.0",
+    "description": "server for jdm application - jeudemot -",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js",
+        "dev": "DEBUG=* nodemon app.js"
+    },
+    "author": "per5u5",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.21.1",
+        "body-parser": "^1.19.0",
+        "charset": "^1.0.1",
+        "cheerio": "^1.0.0-rc.5",
+        "express": "^4.17.1",
+        "iconv": "^3.0.0",
+        "jschardet": "^2.2.1",
+        "mongodb": "^3.6.4",
+        "mongoose": "^5.11.14",
+        "nodemon": "^2.0.7"
+    },
+    "devDependencies": {
+        "concurrently": "^5.3.0",
+        "debug": "^4.3.1"
+    }
+}
