@@ -31,9 +31,10 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log("server running on port " + PORT);
-    //dbGenerator.addFullTerms();
+    //
 });
 
 //dbGenerator.createIdRelations();
 
 // execute it only the first time !
+//dbGenerator.addFullTerms();

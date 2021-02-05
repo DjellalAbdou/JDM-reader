@@ -129,9 +129,9 @@ const searchWord = (state = INITIAL_STATE, action) => {
             };
         case CHANGE_RAFF_TERM:
             let key = idRelations[action.payload.typeId].key;
-            return {
-                ...state,
-                raffTerm: action.payload.word,
+            let isRelation = action.payload.isRelation;
+
+            let objraff = {
                 relations: {
                     ...state.relations,
                     [key]: action.payload[key],
@@ -154,9 +154,35 @@ const searchWord = (state = INITIAL_STATE, action) => {
                           state.filter
                       )
                     : [],
+            };
+
+            let objRelation = {
+                relation: {
+                    ...state.relations,
+                    [key]: action.payload,
+                },
+                inEntities: action.payload.in,
+                outEntities: action.payload.out,
+                inToShow: sortEntities(
+                    action.payload.in.slice(0, 100),
+                    state.filter
+                ),
+                outToShow: sortEntities(
+                    action.payload.out.slice(0, 100),
+                    state.filter
+                ),
+            };
+
+            let toAdd = {
+                ...state,
+                raffTerm: action.payload.word ? action.payload.word : "",
+                ...(isRelation ? objRelation : objraff),
                 currentType: action.payload.typeId,
                 isSearching: false,
+                pageIn: 0,
+                pageOut: 0,
             };
+            return toAdd;
         case CHANGE_SEARCH_TERM:
             return {
                 ...state,

@@ -11,7 +11,18 @@ class ResultsContainer extends Component {
         return (
             <div className="resultscontainer">
                 <SearchContainer />
-                {this.props.init ? (
+
+                {this.props.isSearching ? (
+                    <div className="loaderContainer">
+                        <Loader
+                            style={{ paddingBottom: "30px" }}
+                            type="BallTriangle"
+                            color={Colors.$roze}
+                            height={50}
+                            width={50}
+                        />
+                    </div>
+                ) : this.props.init ? (
                     <div>
                         <div className="emptyContainer">
                             <img
@@ -28,16 +39,6 @@ class ResultsContainer extends Component {
                                 définitions ici !
                             </div>
                         </div>
-                    </div>
-                ) : this.props.isSearching ? (
-                    <div className="loaderContainer">
-                        <Loader
-                            style={{ paddingBottom: "30px" }}
-                            type="BallTriangle"
-                            color={Colors.$roze}
-                            height={50}
-                            width={50}
-                        />
                     </div>
                 ) : (
                     <DefAndRaffContainer />

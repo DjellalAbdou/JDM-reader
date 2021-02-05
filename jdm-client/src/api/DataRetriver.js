@@ -27,6 +27,14 @@ class DataRetriver {
         res = res.data;
         _cb(res);
     };
+
+    getTermRelation = async (word, type, _cb) => {
+        let res = await axiosInstance.get("/api/termRelation", {
+            params: { word, type },
+        });
+        res = res.data;
+        _cb(res);
+    };
 }
 
 export default DataRetriver;

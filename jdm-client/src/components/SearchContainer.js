@@ -51,6 +51,7 @@ class SearchContainer extends Component {
     };
 
     searchWord = (e) => {
+        this.changeAutoCompVisibility(false);
         if (!this.props.filter) {
             if (!Number.isInteger(e)) e.preventDefault();
             if (this.state.searchTerm !== "") {
@@ -58,6 +59,21 @@ class SearchContainer extends Component {
                 dataRetriver.getTerm(
                     this.state.searchTerm,
                     Number.isInteger(e) ? e : this.state.relation,
+                    this.handleSearchWordRes
+                );
+            } else {
+                this.props.changeInit(true);
+            }
+        }
+    };
+
+    searchWordRelation = (e) => {
+        if (!this.props.filter) {
+            if (this.state.searchTerm !== "") {
+                this.props.changeSearching(true);
+                dataRetriver.getTermRelation(
+                    this.state.searchTerm,
+                    e,
                     this.handleSearchWordRes
                 );
             } else {
@@ -81,13 +97,18 @@ class SearchContainer extends Component {
     };
 
     changeRelation = (id) => {
-        if (this.props.raffTerm !== "") {
+        if (this.props.raffTerm !== "" || this.props.currentWord !== "") {
+            let tomap = this.props.raffTerm || this.props.currentWord;
             this.props.changeSearching(true);
-            dataRetriver.getTerm(
-                this.props.raffTerm.replaceAll("'", ""),
+            dataRetriver.getTermRelation(
+                tomap.replaceAll("'", ""),
                 id,
                 (data) => {
-                    let newobj = { ...data, typeId: parseInt(id) };
+                    let newobj = {
+                        ...data,
+                        typeId: parseInt(id),
+                        isRelation: tomap !== this.props.raffTerm,
+                    };
                     console.log(newobj);
                     this.props.changeRaffTerm(newobj);
                     this.setState({ relation: id });
@@ -95,7 +116,7 @@ class SearchContainer extends Component {
             );
         } else {
             this.props.handleChangeType(id);
-            this.searchWord(parseInt(id));
+            //this.searchWordRelation(parseInt(id));
             this.setState({ relation: id });
         }
     };
