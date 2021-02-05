@@ -154,7 +154,7 @@
 .autocompleteContainer {
     position: absolute;
     top: 70px;
-    z-index: 2;
+    z-index: 50;
     width: 90%;
     max-height: 300px;
     box-shadow: 5px 9px 50px rgb(0 0 0 / 6%);
@@ -452,4 +452,10 @@
 .love p {
     padding: 0;
     margin: 0 15px;
+}
+
+@media screen and (max-width: 600px) {
+    .entity {
+        width: 30%;
+    }
 }
