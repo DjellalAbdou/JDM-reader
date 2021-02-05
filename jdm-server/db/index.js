@@ -1,4 +1,4 @@
-const debug = require("debug")("db");
+//const debug = require("debug")("db");
 const keys = require("../config/keys");
 const mongoose = require("mongoose");
 var db;
@@ -23,7 +23,7 @@ mongoose.connection
 
 module.exports = {
     getSimilaireTerms: async function (_term, _cb) {
-        debug("Getting similare terms for " + _term);
+        //debug("Getting similare terms for " + _term);
         let exactArray = null;
         await db.collection("terms").findOne({ term: _term }, (err, res) => {
             console.log(res);
@@ -41,19 +41,19 @@ module.exports = {
     },
 
     save: function (termData) {
-        debug("saving term : " + termData.word + " to database");
+        //debug("saving term : " + termData.word + " to database");
         db.collection("words").save(termData);
     },
 
     getWord: function (_word, _cb) {
-        debug("getting word " + _word + " from database");
+        //debug("getting word " + _word + " from database");
         db.collection("words").findOne({ word: _word }, (err, res) => {
             _cb(res);
         });
     },
 
     updateWord: async function (_word, _attr, _value, _cb) {
-        debug("updating element");
+        //debug("updating element");
         let update = { $set: {} };
         update.$set[_attr] = _value;
         let result = await db

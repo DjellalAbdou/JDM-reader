@@ -1,5 +1,5 @@
 const keys = require("../config/keys");
-const debug = require("debug")("dataRecovery");
+//const debug = require("debug")("dataRecovery");
 const db = require("../db");
 const relationId = require("../assets/id_relation.json");
 
@@ -10,7 +10,7 @@ module.exports = (app, scrapper, linker) => {
         //if (!/.*>.*:/.test(word)) word = word.toLowerCase();
         let type = req.query.type;
 
-        debug("current word is : " + word);
+        //debug("current word is : " + word);
         db.getWord(word, async (result) => {
             if (result != null) {
                 res.send(await deleteUnnecessaryKeys(result, type));
