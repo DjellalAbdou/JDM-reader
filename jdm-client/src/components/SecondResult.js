@@ -6,17 +6,19 @@ import idRelations from "../assets/id_relation.json";
 
 class ResultsContainer extends Component {
     render() {
-        console.log(this.props.relation);
+        //console.log(this.props.relation);
         return (
             <div className="secondresultscontainer resultscontainer">
                 <SearchContainer filter />
                 <RelationsContainer
                     direction="out"
-                    res={this.props.relation ? this.props.relation.out : []}
+                    res={this.props.outToShow}
+                    //res={this.props.relation ? this.props.relation.out : []}
                 />
                 <RelationsContainer
                     direction="in"
-                    res={this.props.relation ? this.props.relation.in : []}
+                    res={this.props.inToShow}
+                    //res={this.props.relation ? this.props.relation.in : []}
                 />
             </div>
         );
@@ -25,7 +27,9 @@ class ResultsContainer extends Component {
 
 const mapStateToProps = ({ searchWord }) => {
     return {
-        relation: searchWord.relations[idRelations[searchWord.currentType].key],
+        inToShow: searchWord.inToShow,
+        outToShow: searchWord.outToShow,
+        //relation: searchWord.relations[idRelations[searchWord.currentType].key],
     };
 };
 

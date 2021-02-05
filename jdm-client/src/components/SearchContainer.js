@@ -1,12 +1,17 @@
 import React, { Component } from "react";
-import { Search, ChevronDown } from "react-feather";
+import { Search, ChevronDown, Filter } from "react-feather";
 import Colors from "../constants/Colors";
 import idRelations from "../assets/id_relation.json";
 import AutoCompleteElem from "./AutoCompleteElem";
 import { dataRetriver } from "../api";
 import RelationTypesContainer from "./RelationTypesContainer";
 import { connect } from "react-redux";
-import { changeType, changeWordRes } from "../store/actions";
+import {
+    changeFilter,
+    changeTermFilter,
+    changeType,
+    changeWordRes,
+} from "../store/actions";
 
 const filter = ["Alpha", "poids"];
 
@@ -23,9 +28,13 @@ class SearchContainer extends Component {
     onChange = (e) => {
         let text = e.target.value;
         this.setState({ searchTerm: text });
-        dataRetriver.getAutoComplete(text, (res) => {
-            this.setState({ autoCompleteTerms: res });
-        });
+        if (!this.props.filter) {
+            dataRetriver.getAutoComplete(text, (res) => {
+                this.setState({ autoCompleteTerms: res });
+            });
+        } else {
+            this.props.changeTermFilter(text);
+        }
     };
 
     changeValue = (value) => {
@@ -39,13 +48,18 @@ class SearchContainer extends Component {
     };
 
     searchWord = (e) => {
-        e.preventDefault();
-        console.log(this.state.searchTerm);
-        dataRetriver.getTerm(
-            this.state.searchTerm,
-            this.state.relation,
-            this.handleSearchWordRes
-        );
+        if (!this.props.filter) {
+            if (!Number.isInteger(e)) e.preventDefault();
+            console.log(this.state.searchTerm);
+            console.log(this.state.relation);
+            if (this.state.searchTerm !== "") {
+                dataRetriver.getTerm(
+                    this.state.searchTerm,
+                    Number.isInteger(e) ? e : this.state.relation,
+                    this.handleSearchWordRes
+                );
+            }
+        }
     };
 
     handleSearchWordRes = (res) => {
@@ -59,11 +73,14 @@ class SearchContainer extends Component {
         };
         console.log(obj);
         this.props.handleSearchTerm(obj);
+        this.changeAutoCompVisibility(false);
     };
 
     changeRelation = (id) => {
         this.setState({ relation: id });
+        console.log(id);
         this.props.handleChangeType(id);
+        this.searchWord(parseInt(id));
         //console.log(id);
     };
 
@@ -73,6 +90,7 @@ class SearchContainer extends Component {
 
     changeFilter = (filter) => {
         this.setState({ filter: filter });
+        this.props.changeFilter(filter);
     };
 
     render() {
@@ -87,12 +105,22 @@ class SearchContainer extends Component {
             <div className="searchcontainer">
                 <div className="searchInputWithDrop">
                     <div className="leftSideSearch">
-                        <Search
-                            color={Colors.$iconsGray}
-                            size={18}
-                            strokeWidth="3"
-                            style={{ cursor: "pointer" }}
-                        />
+                        {this.props.filter ? (
+                            <Filter
+                                color={Colors.$iconsGray}
+                                size={18}
+                                strokeWidth="3"
+                            />
+                        ) : (
+                            <Search
+                                color={Colors.$iconsGray}
+                                size={18}
+                                strokeWidth="3"
+                                style={{ cursor: "pointer" }}
+                                onClick={this.searchWord}
+                            />
+                        )}
+
                         <form
                             style={{ width: "100%" }}
                             onSubmit={this.searchWord}
@@ -100,7 +128,11 @@ class SearchContainer extends Component {
                             <input
                                 placeholder="Chercher..."
                                 className="searchinput"
-                                value={this.state.searchTerm}
+                                value={
+                                    !this.props.filter
+                                        ? this.state.searchTerm
+                                        : this.props.termFilter
+                                }
                                 onChange={this.onChange}
                                 onBlur={() =>
                                     this.changeAutoCompVisibility(false)
@@ -176,6 +208,7 @@ const mapStateToProps = ({ searchWord }) => {
         raffinements: searchWord.raffinements,
         defs: searchWord.defs,
         relations: searchWord.relations,
+        termFilter: searchWord.termFilter,
     };
 };
 
@@ -183,6 +216,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         handleSearchTerm: (termdata) => dispatch(changeWordRes(termdata)),
         handleChangeType: (typeid) => dispatch(changeType(typeid)),
+        changeFilter: (filter) => dispatch(changeFilter(filter)),
+        changeTermFilter: (term) => dispatch(changeTermFilter(term)),
     };
 };
 

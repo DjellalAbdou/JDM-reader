@@ -42,6 +42,7 @@ export default function RelationTypesContainer({
             className="autocompleteContainer relationsSuggestor"
             style={{
                 display: isOpened ? "block" : "none",
+                overflowY: filter ? "auto" : "scroll",
             }}
         >
             {AutoTerms}

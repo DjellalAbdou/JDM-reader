@@ -5,7 +5,17 @@ import Entity from "./Entity";
 import { connect } from "react-redux";
 import { changePage } from "../store/actions";
 
-function RelationsContainer({ direction, res, pageIn, pageOut, changePage }) {
+function RelationsContainer({
+    direction,
+    res,
+    pageIn,
+    pageOut,
+    changePage,
+    filter,
+    termFilter,
+    inEntities,
+    outEntities,
+}) {
     const [defVisible, setDefVisible] = useState(false);
     const defRef = useRef(null);
     const [colorIcon, setColorIcon] = useState(Colors.$textBlack);
@@ -20,13 +30,31 @@ function RelationsContainer({ direction, res, pageIn, pageOut, changePage }) {
         //console.log(defRef.current.scrollHeight);
     };
 
+    /*let entities = res
+        .slice(0, direction === "in" ? pageIn * 100 + 100 : pageOut * 100 + 100)
+        .filter((entity) => {
+            return entity.word
+                .replaceAll("'", "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(
+                    termFilter.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                );
+        });*/
+
+    let entities = res.map((entity, index) => (
+        <Entity key={index} entity={entity} />
+    ));
+
     let addElements = () => {
-        if (res.length !== entities.length) {
-            changePage(
-                direction === "in"
-                    ? { type: "pageIn", page: pageIn + 1 }
-                    : { type: "pageOut", page: pageOut + 1 }
-            );
+        if (direction === "in") {
+            if (inEntities.length !== entities.length) {
+                changePage({ type: "pageIn", page: pageIn + 1 });
+            }
+        } else {
+            if (outEntities.length !== entities.length) {
+                changePage({ type: "pageOut", page: pageOut + 1 });
+            }
         }
     };
 
@@ -39,12 +67,6 @@ function RelationsContainer({ direction, res, pageIn, pageOut, changePage }) {
             );
         }
     };
-
-    let entities = res
-        .slice(0, direction === "in" ? pageIn * 100 + 100 : pageOut * 100 + 100)
-        .map((entity, index) => (
-            <Entity key={entity.word + index} entity={entity} />
-        ));
 
     return (
         <div className="realtionsContainer">
@@ -77,7 +99,7 @@ function RelationsContainer({ direction, res, pageIn, pageOut, changePage }) {
                 className="pageHandlersContainer"
                 style={{
                     display:
-                        entities.length != 0 && styleVisibleDef.maxHeight != 0
+                        entities.length !== 0 && styleVisibleDef.maxHeight !== 0
                             ? "flex"
                             : "none",
                 }}
@@ -123,7 +145,11 @@ function RelationsContainer({ direction, res, pageIn, pageOut, changePage }) {
                         style={{
                             marginRight: 10,
                             color:
-                                res.length !== entities.length
+                                direction === "in"
+                                    ? inEntities.length !== entities.length
+                                        ? colorIconR
+                                        : Colors.$iconsGray
+                                    : outEntities.length !== entities.length
                                     ? colorIconR
                                     : Colors.$iconsGray,
                         }}
@@ -135,7 +161,11 @@ function RelationsContainer({ direction, res, pageIn, pageOut, changePage }) {
                             style={{ transition: "all 0.2s" }}
                             size={16}
                             color={
-                                res.length !== entities.length
+                                direction === "in"
+                                    ? inEntities.length !== entities.length
+                                        ? colorIconR
+                                        : Colors.$iconsGray
+                                    : outEntities.length !== entities.length
                                     ? colorIconR
                                     : Colors.$iconsGray
                             }
@@ -152,6 +182,10 @@ const mapStateToProps = ({ searchWord }) => {
     return {
         pageIn: searchWord.pageIn,
         pageOut: searchWord.pageOut,
+        filter: searchWord.filter,
+        termFilter: searchWord.termFilter,
+        inEntities: searchWord.inEntities,
+        outEntities: searchWord.outEntities,
     };
 };
 

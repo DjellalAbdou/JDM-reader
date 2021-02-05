@@ -18,10 +18,11 @@ class DataRetriver {
     };
 
     getTerm = async (word, type, _cb) => {
+        console.log(type);
         let res = await axiosInstance.get("/api/find", {
             params: { word, type },
         });
-        //console.log(res.data);
+        console.log(res.data);
         res = res.data;
         _cb(res);
     };
