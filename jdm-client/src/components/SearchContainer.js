@@ -51,6 +51,8 @@ class SearchContainer extends Component {
     searchWord = (e) => {
         if (!this.props.filter) {
             if (!Number.isInteger(e)) e.preventDefault();
+            console.log(this.state.searchTerm);
+            console.log(this.state.relation);
             if (this.state.searchTerm !== "") {
                 dataRetriver.getTerm(
                     this.state.searchTerm,
@@ -70,6 +72,7 @@ class SearchContainer extends Component {
                 .sort((a, b) => parseInt(b.w) - parseInt(a.w)),
             relation: res[idRelations[this.state.relation].key],
         };
+        console.log(obj);
         this.props.handleSearchTerm(obj);
         this.changeAutoCompVisibility(false);
     };

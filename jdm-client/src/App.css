@@ -154,7 +154,7 @@
     top: 70px;
     z-index: 2;
     width: 90%;
-    max-height: 200px;
+    max-height: 300px;
     box-shadow: 5px 9px 50px rgb(0 0 0 / 6%);
     border-radius: 8px;
     background: #fff;
@@ -163,6 +163,7 @@
 .relationsSuggestor {
     width: 100%;
     left: -16px;
+    max-height: 200px;
     top: 50px;
     box-sizing: border-box;
     background: #fff;

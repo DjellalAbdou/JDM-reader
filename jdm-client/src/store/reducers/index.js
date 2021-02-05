@@ -7,6 +7,7 @@ import {
     CHANGE_FILTER,
     CHANGE_TERM_FILTER,
     CHANGE_RAFF_TERM,
+    CHANGE_SEARCH_TERM,
 } from "../actions/types";
 import idRelations from "../../assets/id_relation.json";
 
@@ -26,6 +27,7 @@ const INITIAL_STATE = {
     inToShow: [],
     outToShow: [],
     raffTerm: "",
+    searchTerm: "",
 };
 
 const searchWord = (state = INITIAL_STATE, action) => {
@@ -151,6 +153,11 @@ const searchWord = (state = INITIAL_STATE, action) => {
                       )
                     : [],
                 currentType: action.payload.typeId,
+            };
+        case CHANGE_SEARCH_TERM:
+            return {
+                ...state,
+                searchTerm: action.payload,
             };
         default:
             return state;

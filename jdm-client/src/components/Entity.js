@@ -2,9 +2,9 @@ import React from "react";
 import { dataRetriver } from "../api";
 import { connect } from "react-redux";
 import idRelations from "../assets/id_relation.json";
-import { changeWordRes } from "../store/actions";
+import { changeSearchTerm, changeWordRes } from "../store/actions";
 
-function Entity({ entity, currentType, handleSearchTerm }) {
+function Entity({ entity, currentType, handleSearchTerm, changeSearchTerm }) {
     let word = entity.word.replaceAll("'", "");
 
     let searchNewTerm = () => {
@@ -35,6 +35,7 @@ function Entity({ entity, currentType, handleSearchTerm }) {
         }
 
         //console.log(obj);
+        changeSearchTerm("");
         handleSearchTerm(obj);
         //this.changeAutoCompVisibility(false);
     };
@@ -54,6 +55,7 @@ const mapStateToProps = ({ searchWord }) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         handleSearchTerm: (termdata) => dispatch(changeWordRes(termdata)),
+        changeSearchTerm: (value) => dispatch(changeSearchTerm(value)),
     };
 };
 
