@@ -16,9 +16,6 @@ let dbGenerator = new DBGenerator();
 let linker = new Linker();
 
 require("./routes/dataRecovery")(app, scrapper, linker);
-app.get("/", (req, res) => {
-    res.send({ hi: "per5u5" });
-});
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "..", "jdm-client/build")));
