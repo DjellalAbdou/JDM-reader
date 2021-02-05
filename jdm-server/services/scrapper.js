@@ -41,7 +41,7 @@ Scrapper = function () {
                 word: word,
                 eid: Number(code.split("(eid=")[1].split(")")[0]),
                 def: [],
-                r_raff_sem: [],
+                r_raff_sem: { in: [], out: [] },
                 nodes: [],
                 relations: [],
             };
@@ -55,10 +55,20 @@ Scrapper = function () {
 
             // this line to scrap all infos relations and entities...
             //this.scrapAllInfo(code, wordObject);
-            if (wordObject.r_raff_sem.length == 0)
-                await this.scrapRelationType(word, wordObject, 1, false);
+            /*if (wordObject.r_raff_sem.length == 0)
+                await this.scrapRelationType(word, wordObject, 1, false, true);*/
 
-            await this.scrapRelationType(word, wordObject, type, false);
+            /**
+             * website of jdm is crazy
+             * sometimes it shows all the relations
+             * sometimes it shows just one relation
+             * depending on the word
+             * so we need to scrap all the in or out relations
+             * basiclly wtf
+             * */
+            await this.scrapRelationType(word, wordObject, 1, false, true);
+            await this.scrapRelationType(word, wordObject, type, false, false);
+            await this.scrapRelationType(word, wordObject, type, false, true);
 
             db.save(wordObject);
 
@@ -69,7 +79,14 @@ Scrapper = function () {
         }
     };
 
-    this.scrapRelationType = function (word, wordObject, type, updateDB, _cb) {
+    this.scrapRelationType = function (
+        word,
+        wordObject,
+        type,
+        updateDB,
+        isOut,
+        _cb
+    ) {
         return new Promise(async (resolve, reject) => {
             let urlToScrap =
                 keys.JDMServerPref +
@@ -77,7 +94,8 @@ Scrapper = function () {
                 keys.JDMServerSufx +
                 word +
                 "&rel=" +
-                type;
+                type +
+                (isOut ? "&relin=norelin" : "&relout=norelout");
 
             try {
                 let rawData = await axios.get(urlToScrap, {
@@ -99,8 +117,10 @@ Scrapper = function () {
                             word: rafData[5] ? rafData[5] : rafData[2],
                         };
                         if (wordObject[relationId[type]] === undefined)
-                            wordObject[relationId[type]] = [];
-                        wordObject[relationId[type]].push(rafObj);
+                            wordObject[relationId[type]] = { in: [], out: [] };
+                        isOut
+                            ? wordObject[relationId[type]].out.push(rafObj)
+                            : wordObject[relationId[type]].in.push(rafObj);
                     });
                 }
                 if (updateDB) {
@@ -117,6 +137,10 @@ Scrapper = function () {
                 reject();
             }
         });
+    };
+
+    this.getAllOutNodes = function (code) {
+        //let rels = code.match(/)
     };
 
     this.scrapAllInfo = function (code, wordObject) {

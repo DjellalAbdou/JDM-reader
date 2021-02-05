@@ -1,15 +1,25 @@
 import React from "react";
 
-export default function AutoCompleteElem({ term, changeValue }) {
+export default function AutoCompleteElem({
+    term,
+    changeValue,
+    RType,
+    id,
+    selected,
+    filter,
+}) {
     return (
         <div
-            className="autocompleteElem"
+            className={
+                (RType ? "RtypeElem" : "autocompleteElem") +
+                (selected ? " RtypeElemSelected" : "")
+            }
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => {
-                changeValue(term.term);
+                changeValue(RType ? (filter ? term : id) : term.term);
             }}
         >
-            <p> {term.term}</p>
+            <p> {RType ? (filter ? term : term.name) : term.term}</p>
         </div>
     );
 }

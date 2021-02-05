@@ -1,4 +1,5 @@
 import axios from "axios";
+import idRelations from "../assets/id_relation.json";
 
 const axiosDefaultConfig = {
     proxy: {
@@ -14,6 +15,15 @@ class DataRetriver {
             params: { word },
         });
         _cb(res.data);
+    };
+
+    getTerm = async (word, type, _cb) => {
+        let res = await axiosInstance.get("/api/find", {
+            params: { word, type },
+        });
+        //console.log(res.data);
+        res = res.data;
+        _cb(res);
     };
 }
 

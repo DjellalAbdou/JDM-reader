@@ -7,16 +7,15 @@ export default function DefAndRaffContainer({
     definitions,
     raffinements,
 }) {
-    const [defVisible, setDefVisible] = useState(true);
+    const [defVisible, setDefVisible] = useState(false);
     const defRef = useRef(null);
     let styleVisibleDef = defVisible
         ? {
-              maxHeight: defRef.current ? defRef.current.scrollHeight : "auto",
+              maxHeight: defRef.current ? defRef.current.scrollHeight : 1000,
           }
         : { maxHeight: 0 };
     let toggleDefVisibility = () => {
         setDefVisible(!defVisible);
-        console.log(defRef.current.scrollHeight);
     };
 
     return (
@@ -28,19 +27,25 @@ export default function DefAndRaffContainer({
                 <p>Raffinement lié : </p>
                 <div className="raffinementElems">
                     {raffinements.map((raff) => (
-                        <div className="raffElem">
-                            <p>{raff}</p>
+                        <div key={raff.word} className="raffElem">
+                            <p>{raff.word}</p>
                         </div>
                     ))}
                 </div>
             </div>
             <div className="defwrapper" onClick={() => toggleDefVisibility()}>
                 <p>Definitions du mot :</p>
-                <ChevronUp
-                    size={16}
-                    color={Colors.$subTitleGray}
-                    strokeWidth="4"
-                />
+                <div
+                    className={
+                        "defArrow " + (defVisible ? "" : "defArrowclose")
+                    }
+                >
+                    <ChevronUp
+                        size={16}
+                        color={Colors.$subTitleGray}
+                        strokeWidth="4"
+                    />
+                </div>
             </div>
             <div
                 ref={defRef}
@@ -48,7 +53,7 @@ export default function DefAndRaffContainer({
                 style={styleVisibleDef}
             >
                 {definitions.map((def, index) => (
-                    <div className="definition">
+                    <div key={index} className="definition">
                         {index + 1} - {def}
                     </div>
                 ))}

@@ -1,5 +1,6 @@
 import React from "react";
 
 export default function Entity({ entity }) {
-    return <div className="entity">{entity.word}</div>;
+    let word = entity.word.replaceAll("'", "");
+    return <div className="entity">{word}</div>;
 }

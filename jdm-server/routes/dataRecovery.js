@@ -43,8 +43,20 @@ module.exports = (app, scrapper, linker) => {
                         result,
                         typeRelation,
                         true,
+                        true,
                         (ret) => {
-                            res.send(ret);
+                            //console.log("out relations hahhahahahah");
+                            scrapper.scrapRelationType(
+                                word,
+                                result,
+                                typeRelation,
+                                true,
+                                false,
+                                (rt) => {
+                                    // console.log("in relations hahhahahahah");
+                                    res.send(rt);
+                                }
+                            );
                         }
                     );
                     console.log("call scrapper");

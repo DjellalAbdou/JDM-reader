@@ -72,6 +72,8 @@
     width: 100%;
     margin: 0 auto;
     transform: translateY(-50%);
+    position: relative;
+    z-index: 100;
 }
 
 .searchInputWithDrop {
@@ -128,6 +130,7 @@
     justify-content: space-between;
     width: 30%;
     cursor: pointer;
+    position: relative;
 }
 
 .rightSideSearch p {
@@ -139,6 +142,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.3s;
+}
+
+.dropdownSearchClose {
+    transform: rotate(180deg);
 }
 
 .autocompleteContainer {
@@ -149,12 +157,37 @@
     max-height: 300px;
     box-shadow: 5px 9px 50px rgb(0 0 0 / 6%);
     border-radius: 8px;
+    background: #fff;
+}
+
+.relationsSuggestor {
+    width: 100%;
+    left: -16px;
+    top: 50px;
+    box-sizing: border-box;
+    background: #fff;
+    z-index: 10;
+    transform: rotate(0deg);
 }
 
 .autocompleteElem {
     width: 100%;
     padding: 15px 8px;
     cursor: pointer;
+}
+
+.RtypeElem {
+    width: 100%;
+    padding: 15px 8px;
+    cursor: pointer;
+}
+
+.RtypeElemSelected p {
+    color: #ea4c89;
+}
+
+.RtypeElem:hover {
+    background: #e7e7e9;
 }
 
 .autocompleteElem p:hover {
@@ -261,6 +294,7 @@
 
 .realtionsContainer {
     margin-bottom: 20px;
+    z-index: 2;
 }
 
 .relationsWrapper {
@@ -274,7 +308,7 @@
 
 .entity {
     color: #ea4c89;
-    padding: 10px 20px;
+    padding: 10px 2px;
     max-width: 170px;
     width: 15%;
     border: 0.5px solid #f082ac;
@@ -283,10 +317,54 @@
     transition: all 0.3s;
     margin-right: 9px;
     margin-bottom: 9px;
+    box-sizing: border-box;
+    word-wrap: break-word;
 }
 
 .entity:hover {
     color: #fff;
     background: #f082ac;
     border: #f082ac;
+}
+.defArrow {
+    position: relative;
+    transition: all 0.3s;
+    z-index: 1;
+}
+
+.defArrowclose {
+    transform: rotate(180deg);
+}
+
+.pageHandler {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #0d0c22;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.pageHandler *:hover {
+    color: #ea4c89;
+}
+
+.pageHandlersContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.pageHandlersContainer:not(:first-child) {
+    padding-bottom: 20px;
+}
+
+.iconpageHandler {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
