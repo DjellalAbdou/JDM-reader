@@ -7,7 +7,7 @@ DBGenerator = function () {
     this.addFullTerms = async function () {
         console.log(process.cwd());
         fs.readFile(
-            process.cwd() + "/assets/termsList.txt",
+            process.cwd() + "/jdm-server/assets/termsList.txt",
             "utf8",
             (err, data) => {
                 if (err) {
