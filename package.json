@@ -8,7 +8,7 @@
         "server": "cd jdm-server && yarn dev",
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
         "build": "cd jdm-server && yarn install",
-        "heroku-postbuild": "cd jdm-client && yarn install && yarn install --only=dev --no-shrinkwrap && yarn build "
+        "heroku-postbuild": "cd jdm-server && yarn install && cd ../jdm-client && yarn install && yarn install --only=dev --no-shrinkwrap && yarn build "
     },
     "author": "per5u5",
     "license": "ISC",
