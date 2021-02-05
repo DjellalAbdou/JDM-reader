@@ -4,6 +4,7 @@ const Scrapper = require("./services/scrapper").Scrapper;
 require("./db");
 const DBGenerator = require("./services/DBGenerator").DBGenerator;
 const Linker = require("./services/linker").Linker;
+const path = require("path");
 
 const app = express();
 
@@ -19,7 +20,16 @@ app.get("/", (req, res) => {
     res.send({ hi: "per5u5" });
 });
 
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "jdm-client/build")));
+
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "jdm-client/build", "index.html"));
+    });
+}
+
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
     console.log("server running on port " + PORT);
 });

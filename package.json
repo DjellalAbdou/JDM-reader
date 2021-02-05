@@ -3,9 +3,11 @@
     "version": "1.1.0",
     "description": "application for jdm - jeudemot -",
     "scripts": {
+        "start": "node ./jdm-server/app.js",
         "client": "cd jdm-client && yarn start",
         "server": "cd jdm-server && yarn dev",
-        "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+        "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+        "heroku-postbuild": "cd jdm-client && yarn install && yarn install --only=dev --no-shrinkwrap && yarn build "
     },
     "author": "per5u5",
     "license": "ISC",
