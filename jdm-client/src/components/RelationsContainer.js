@@ -1,5 +1,10 @@
 import React, { useState, useRef } from "react";
-import { ChevronUp, ChevronLeft, ChevronRight } from "react-feather";
+import {
+    ChevronUp,
+    ChevronLeft,
+    ChevronRight,
+    AlertCircle,
+} from "react-feather";
 import Colors from "../constants/Colors";
 import Entity from "./Entity";
 import { connect } from "react-redux";
@@ -56,114 +61,133 @@ function RelationsContainer({
         }
     };
 
-    return (
-        <div className="realtionsContainer">
-            <div className="defwrapper" onClick={() => toggleDefVisibility()}>
-                <p>
-                    {direction === "in"
-                        ? "relations entrantes"
-                        : "realtions sortantes"}
-                </p>
-                <div
-                    className={
-                        "defArrow " + (defVisible ? "" : "defArrowclose")
-                    }
-                >
-                    <ChevronUp
-                        size={16}
-                        color={Colors.$subTitleGray}
-                        strokeWidth="4"
-                    />
-                </div>
+    if (!entities.length > 0) {
+        return (
+            <div className="notExist">
+                <AlertCircle
+                    size={25}
+                    color={Colors.$textBlack}
+                    strokeWidth="3"
+                />
+                <div>{`Les realtions ${
+                    direction === "in" ? "entrantes" : "sortante"
+                } n'existe pas pour ce mot dans notre jeu !`}</div>
             </div>
-            <div
-                ref={defRef}
-                style={styleVisibleDef}
-                className="relationsWrapper"
-            >
-                {entities}
-            </div>
-            <div
-                className="pageHandlersContainer"
-                style={{
-                    display:
-                        entities.length !== 0 && styleVisibleDef.maxHeight !== 0
-                            ? "flex"
-                            : "none",
-                }}
-            >
+        );
+    } else {
+        return (
+            <div className="realtionsContainer">
                 <div
-                    className="pageHandler"
-                    onMouseOver={() => setColorIcon(Colors.$roze)}
-                    onMouseOut={() => setColorIcon(Colors.$textBlack)}
-                    onClick={removeElements}
+                    className="defwrapper"
+                    onClick={() => toggleDefVisibility()}
                 >
-                    <div className="iconpageHandler">
-                        <ChevronLeft
-                            style={{ transition: "all 0.2s" }}
+                    <p>
+                        {direction === "in"
+                            ? "relations entrantes"
+                            : "realtions sortantes"}
+                    </p>
+                    <div
+                        className={
+                            "defArrow " + (defVisible ? "" : "defArrowclose")
+                        }
+                    >
+                        <ChevronUp
                             size={16}
-                            color={
-                                entities.length <= 100
-                                    ? Colors.$iconsGray
-                                    : colorIcon
-                            }
+                            color={Colors.$subTitleGray}
                             strokeWidth="4"
                         />
                     </div>
-                    <div
-                        style={{
-                            marginLeft: 10,
-                            color:
-                                entities.length <= 100
-                                    ? Colors.$iconsGray
-                                    : colorIcon,
-                        }}
-                    >
-                        diminuer
-                    </div>
                 </div>
+                <div
+                    ref={defRef}
+                    style={styleVisibleDef}
+                    className="relationsWrapper"
+                >
+                    {entities}
+                </div>
+                <div
+                    className="pageHandlersContainer"
+                    style={{
+                        display:
+                            entities.length !== 0 &&
+                            styleVisibleDef.maxHeight !== 0
+                                ? "flex"
+                                : "none",
+                    }}
+                >
+                    <div
+                        className="pageHandler"
+                        onMouseOver={() => setColorIcon(Colors.$roze)}
+                        onMouseOut={() => setColorIcon(Colors.$textBlack)}
+                        onClick={removeElements}
+                    >
+                        <div className="iconpageHandler">
+                            <ChevronLeft
+                                style={{ transition: "all 0.2s" }}
+                                size={16}
+                                color={
+                                    entities.length <= 100
+                                        ? Colors.$iconsGray
+                                        : colorIcon
+                                }
+                                strokeWidth="4"
+                            />
+                        </div>
+                        <div
+                            style={{
+                                marginLeft: 10,
+                                color:
+                                    entities.length <= 100
+                                        ? Colors.$iconsGray
+                                        : colorIcon,
+                            }}
+                        >
+                            diminuer
+                        </div>
+                    </div>
 
-                <div
-                    className="pageHandler"
-                    onMouseOver={() => setColorIconR(Colors.$roze)}
-                    onMouseOut={() => setColorIconR(Colors.$textBlack)}
-                    onClick={addElements}
-                >
                     <div
-                        style={{
-                            marginRight: 10,
-                            color:
-                                direction === "in"
-                                    ? inEntities.length !== entities.length
-                                        ? colorIconR
-                                        : Colors.$iconsGray
-                                    : outEntities.length !== entities.length
-                                    ? colorIconR
-                                    : Colors.$iconsGray,
-                        }}
+                        className="pageHandler"
+                        onMouseOver={() => setColorIconR(Colors.$roze)}
+                        onMouseOut={() => setColorIconR(Colors.$textBlack)}
+                        onClick={addElements}
                     >
-                        ajouter
-                    </div>
-                    <div className="iconpageHandler">
-                        <ChevronRight
-                            style={{ transition: "all 0.2s" }}
-                            size={16}
-                            color={
-                                direction === "in"
-                                    ? inEntities.length !== entities.length
+                        <div
+                            style={{
+                                marginRight: 10,
+                                color:
+                                    direction === "in"
+                                        ? inEntities.length !== entities.length
+                                            ? colorIconR
+                                            : Colors.$iconsGray
+                                        : outEntities.length !== entities.length
+                                        ? colorIconR
+                                        : Colors.$iconsGray,
+                            }}
+                        >
+                            ajouter
+                        </div>
+                        <div className="iconpageHandler">
+                            <ChevronRight
+                                style={{ transition: "all 0.2s" }}
+                                size={16}
+                                color={
+                                    direction === "in"
+                                        ? inEntities.length !== entities.length
+                                            ? colorIconR
+                                            : Colors.$iconsGray
+                                        : outEntities.length !== entities.length
                                         ? colorIconR
                                         : Colors.$iconsGray
-                                    : outEntities.length !== entities.length
-                                    ? colorIconR
-                                    : Colors.$iconsGray
-                            }
-                            strokeWidth="4"
-                        />
+                                }
+                                strokeWidth="4"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 const mapStateToProps = ({ searchWord }) => {

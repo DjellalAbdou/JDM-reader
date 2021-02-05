@@ -369,3 +369,22 @@
     justify-content: center;
     align-items: center;
 }
+
+.notExist {
+    display: flex;
+
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 20px 0;
+}
+
+.notExist:last-child {
+    padding-bottom: 40px;
+}
+
+.notExist div {
+    color: #e0132f;
+    margin-left: 20px;
+}

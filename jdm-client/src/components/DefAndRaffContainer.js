@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { ChevronUp } from "react-feather";
+import { ChevronUp, AlertCircle } from "react-feather";
 import Colors from "../constants/Colors";
 import { connect } from "react-redux";
 import { dataRetriver } from "../api";
@@ -50,20 +50,35 @@ function DefAndRaffContainer({
                     ))}
                 </div>
             </div>
-            <div className="defwrapper" onClick={() => toggleDefVisibility()}>
-                <p>Definitions du mot :</p>
+            {raffinements.length > 0 ? (
                 <div
-                    className={
-                        "defArrow " + (defVisible ? "" : "defArrowclose")
-                    }
+                    className="defwrapper"
+                    onClick={() => toggleDefVisibility()}
                 >
-                    <ChevronUp
-                        size={16}
-                        color={Colors.$subTitleGray}
-                        strokeWidth="4"
-                    />
+                    <p>Definitions du mot :</p>
+                    <div
+                        className={
+                            "defArrow " + (defVisible ? "" : "defArrowclose")
+                        }
+                    >
+                        <ChevronUp
+                            size={16}
+                            color={Colors.$subTitleGray}
+                            strokeWidth="4"
+                        />
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="notExist">
+                    <AlertCircle
+                        size={25}
+                        color={Colors.$textBlack}
+                        strokeWidth="3"
+                    />
+                    <div>Ce mot n'existe pas dans le jeu !</div>
+                </div>
+            )}
+
             <div
                 ref={defRef}
                 className="definitionsContainer"
