@@ -7,7 +7,7 @@ module.exports = (app, scrapper, linker) => {
     app.get(`${keys.API}find`, async (req, res) => {
         let word = req.query.word;
 
-        if (!/.*>.*:/.test(word)) word = word.toLowerCase();
+        //if (!/.*>.*:/.test(word)) word = word.toLowerCase();
         let type = req.query.type;
 
         debug("current word is : " + word);

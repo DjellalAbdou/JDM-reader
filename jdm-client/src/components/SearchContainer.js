@@ -8,7 +8,9 @@ import RelationTypesContainer from "./RelationTypesContainer";
 import { connect } from "react-redux";
 import {
     changeFilter,
+    changeInit,
     changeRaffTerm,
+    changeSearching,
     changeTermFilter,
     changeType,
     changeWordRes,
@@ -51,14 +53,15 @@ class SearchContainer extends Component {
     searchWord = (e) => {
         if (!this.props.filter) {
             if (!Number.isInteger(e)) e.preventDefault();
-            console.log(this.state.searchTerm);
-            console.log(this.state.relation);
             if (this.state.searchTerm !== "") {
+                this.props.changeSearching(true);
                 dataRetriver.getTerm(
                     this.state.searchTerm,
                     Number.isInteger(e) ? e : this.state.relation,
                     this.handleSearchWordRes
                 );
+            } else {
+                this.props.changeInit(true);
             }
         }
     };
@@ -79,6 +82,7 @@ class SearchContainer extends Component {
 
     changeRelation = (id) => {
         if (this.props.raffTerm !== "") {
+            this.props.changeSearching(true);
             dataRetriver.getTerm(
                 this.props.raffTerm.replaceAll("'", ""),
                 id,
@@ -232,6 +236,8 @@ const mapDispatchToProps = (dispatch) => {
         changeFilter: (filter) => dispatch(changeFilter(filter)),
         changeTermFilter: (term) => dispatch(changeTermFilter(term)),
         changeRaffTerm: (term) => dispatch(changeRaffTerm(term)),
+        changeSearching: (bool) => dispatch(changeSearching(bool)),
+        changeInit: (bool) => dispatch(changeInit(bool)),
     };
 };
 

@@ -2,12 +2,23 @@ import React from "react";
 import { dataRetriver } from "../api";
 import { connect } from "react-redux";
 import idRelations from "../assets/id_relation.json";
-import { changeSearchTerm, changeWordRes } from "../store/actions";
+import {
+    changeSearching,
+    changeSearchTerm,
+    changeWordRes,
+} from "../store/actions";
 
-function Entity({ entity, currentType, handleSearchTerm, changeSearchTerm }) {
+function Entity({
+    entity,
+    currentType,
+    handleSearchTerm,
+    changeSearching,
+    changeSearchTerm,
+}) {
     let word = entity.word.replaceAll("'", "");
 
     let searchNewTerm = () => {
+        changeSearching(true);
         dataRetriver.getTerm(word, currentType, (data) => {
             handleSearchWordRes(data, word);
         });
@@ -56,6 +67,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         handleSearchTerm: (termdata) => dispatch(changeWordRes(termdata)),
         changeSearchTerm: (value) => dispatch(changeSearchTerm(value)),
+        changeSearching: (bool) => dispatch(changeSearching(bool)),
     };
 };
 

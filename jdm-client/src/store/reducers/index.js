@@ -8,6 +8,7 @@ import {
     CHANGE_TERM_FILTER,
     CHANGE_RAFF_TERM,
     CHANGE_SEARCH_TERM,
+    CHANGE_INIT,
 } from "../actions/types";
 import idRelations from "../../assets/id_relation.json";
 
@@ -28,6 +29,7 @@ const INITIAL_STATE = {
     outToShow: [],
     raffTerm: "",
     searchTerm: "",
+    init: true,
 };
 
 const searchWord = (state = INITIAL_STATE, action) => {
@@ -57,8 +59,11 @@ const searchWord = (state = INITIAL_STATE, action) => {
                 pageIn: 0,
                 pageOut: 0,
                 raffTerm: "",
+                isSearching: false,
+                init: false,
             };
         case CHANGE_SEARCHING:
+            console.log(action.payload + " am here payload searching");
             return {
                 ...state,
                 isSearching: action.payload,
@@ -123,10 +128,7 @@ const searchWord = (state = INITIAL_STATE, action) => {
                 ),
             };
         case CHANGE_RAFF_TERM:
-            console.log("am hereeeee damn mother fucker");
             let key = idRelations[action.payload.typeId].key;
-            console.log(action.payload);
-            console.log(key);
             return {
                 ...state,
                 raffTerm: action.payload.word,
@@ -153,11 +155,17 @@ const searchWord = (state = INITIAL_STATE, action) => {
                       )
                     : [],
                 currentType: action.payload.typeId,
+                isSearching: false,
             };
         case CHANGE_SEARCH_TERM:
             return {
                 ...state,
                 searchTerm: action.payload,
+            };
+        case CHANGE_INIT:
+            return {
+                ...state,
+                init: true,
             };
         default:
             return state;

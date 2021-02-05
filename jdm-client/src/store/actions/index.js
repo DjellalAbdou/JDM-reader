@@ -7,10 +7,17 @@ import {
     CHANGE_ENTITIES,
     CHANGE_RAFF_TERM,
     CHANGE_SEARCH_TERM,
+    CHANGE_SEARCHING,
+    CHANGE_INIT,
 } from "./types";
 
 export const changeWordRes = (state) => ({
     type: CHANGE_WORD_RES,
+    payload: state,
+});
+
+export const changeSearching = (state) => ({
+    type: CHANGE_SEARCHING,
     payload: state,
 });
 
@@ -46,5 +53,10 @@ export const changeRaffTerm = (state) => ({
 
 export const changeSearchTerm = (state) => ({
     type: CHANGE_SEARCH_TERM,
+    payload: state,
+});
+
+export const changeInit = (state) => ({
+    type: CHANGE_INIT,
     payload: state,
 });
