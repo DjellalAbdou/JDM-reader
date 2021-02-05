@@ -17,7 +17,7 @@ class ResultsContainer extends Component {
                     <div>
                         <div className="emptyContainer">
                             <img
-                                width={120}
+                                width={60}
                                 src={openBook}
                                 alt="empty opened book"
                             />

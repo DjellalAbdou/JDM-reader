@@ -52,6 +52,8 @@
     font-family: "Potta One", cursive;
     font-weight: 300;
     font-size: large;
+    margin: 0;
+    margin-left: 15px;
 }
 
 .background-bar {
@@ -430,7 +432,7 @@
     box-shadow: 5px 9px 50px rgb(0 0 0 / 6%);
 }
 .footerContainer div {
-    width: 100%;
+    width: 33%;
     color: #0d0c22;
     font-weight: 700;
     font-size: 12px;
@@ -440,6 +442,8 @@
     margin-top: 10px;
     width: auto !important;
     transform: rotate(45deg);
+    margin-left: 30px;
+    margin-right: 20px;
 }
 
 .love {

@@ -36,4 +36,4 @@ app.listen(PORT, () => {
 //dbGenerator.createIdRelations();
 
 // execute it only the first time !
-//dbGenerator.addFullTerms();
+dbGenerator.addFullTerms();
