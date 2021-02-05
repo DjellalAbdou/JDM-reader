@@ -50,24 +50,38 @@ function DefAndRaffContainer({
                     ))}
                 </div>
             </div>
-            {raffinements.length > 0 ? (
-                <div
-                    className="defwrapper"
-                    onClick={() => toggleDefVisibility()}
-                >
-                    <p>Definitions du mot :</p>
+            {definitions.length > 0 ? (
+                <>
                     <div
-                        className={
-                            "defArrow " + (defVisible ? "" : "defArrowclose")
-                        }
+                        className="defwrapper"
+                        onClick={() => toggleDefVisibility()}
                     >
-                        <ChevronUp
-                            size={16}
-                            color={Colors.$subTitleGray}
-                            strokeWidth="4"
-                        />
+                        <p>Definitions du mot :</p>
+                        <div
+                            className={
+                                "defArrow " +
+                                (defVisible ? "" : "defArrowclose")
+                            }
+                        >
+                            <ChevronUp
+                                size={16}
+                                color={Colors.$subTitleGray}
+                                strokeWidth="4"
+                            />
+                        </div>
                     </div>
-                </div>
+                    <div
+                        ref={defRef}
+                        className="definitionsContainer"
+                        style={styleVisibleDef}
+                    >
+                        {definitions.map((def, index) => (
+                            <div key={index} className="definition">
+                                {index + 1} - {def}
+                            </div>
+                        ))}
+                    </div>
+                </>
             ) : (
                 <div className="notExist">
                     <AlertCircle
@@ -75,21 +89,9 @@ function DefAndRaffContainer({
                         color={Colors.$textBlack}
                         strokeWidth="3"
                     />
-                    <div>Ce mot n'existe pas dans le jeu !</div>
+                    <div>Définition de ce mot n'existe pas dans le jeu !</div>
                 </div>
             )}
-
-            <div
-                ref={defRef}
-                className="definitionsContainer"
-                style={styleVisibleDef}
-            >
-                {definitions.map((def, index) => (
-                    <div key={index} className="definition">
-                        {index + 1} - {def}
-                    </div>
-                ))}
-            </div>
         </div>
     );
 }

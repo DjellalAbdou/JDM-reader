@@ -1,5 +1,7 @@
 .App {
     text-align: center;
+    position: relative;
+    padding-bottom: 200px;
 }
 
 .App-logo {
@@ -386,7 +388,7 @@
 }
 
 .notExist div {
-    color: #e0132f;
+    color: #ea4c89;
     margin-left: 20px;
 }
 
@@ -411,4 +413,43 @@
     align-items: center;
     width: 100%;
     height: 200px;
+}
+
+.footerContainer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 150px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 200px;
+    padding: 20px 10px;
+    box-shadow: 5px 9px 50px rgb(0 0 0 / 6%);
+}
+.footerContainer div {
+    width: 100%;
+    color: #0d0c22;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.logoFooterContainer {
+    margin-top: 10px;
+    width: auto !important;
+    transform: rotate(45deg);
+}
+
+.love {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.love p {
+    padding: 0;
+    margin: 0 15px;
 }

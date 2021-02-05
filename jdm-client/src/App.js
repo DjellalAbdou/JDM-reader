@@ -6,6 +6,7 @@ import SecondResultContainer from "./components/SecondResult";
 import { Provider } from "react-redux";
 import store from "./store";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import Footer from "./components/Footer";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Header />
                 <ResultsContainer />
                 <SecondResultContainer />
+                <Footer />
             </div>
         </Provider>
     );
