@@ -37,7 +37,7 @@ Scrapper = function () {
 
             data = this.convertToUtf8(rawData);
 
-            console.log(code === undefined, code === null, code === "");
+            //console.log(code === undefined, code === null, code === "");
 
             // word doesnt exist
 

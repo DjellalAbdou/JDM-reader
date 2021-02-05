@@ -13,11 +13,11 @@ db = mongoose.connect(keys.mongoURI, {
 
 mongoose.connection
     .once("open", () => {
-        debug("connection opened");
+        //debug("connection opened");
         db = mongoose.connection.db;
     })
     .on("error", (err) => {
-        debug("mongo connection error");
+        //debug("mongo connection error");
         console.log(err);
     });
 
