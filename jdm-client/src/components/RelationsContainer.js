@@ -30,18 +30,6 @@ function RelationsContainer({
         //console.log(defRef.current.scrollHeight);
     };
 
-    /*let entities = res
-        .slice(0, direction === "in" ? pageIn * 100 + 100 : pageOut * 100 + 100)
-        .filter((entity) => {
-            return entity.word
-                .replaceAll("'", "")
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .includes(
-                    termFilter.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                );
-        });*/
-
     let entities = res.map((entity, index) => (
         <Entity key={index} entity={entity} />
     ));

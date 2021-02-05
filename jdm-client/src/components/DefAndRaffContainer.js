@@ -1,11 +1,17 @@
 import React, { useState, useRef } from "react";
 import { ChevronUp } from "react-feather";
 import Colors from "../constants/Colors";
+import { connect } from "react-redux";
+import { dataRetriver } from "../api";
+import { changeRaffTerm } from "../store/actions";
 
-export default function DefAndRaffContainer({
+function DefAndRaffContainer({
     word,
     definitions,
     raffinements,
+    raffTerm,
+    currentType,
+    changeRaffTerm,
 }) {
     const [defVisible, setDefVisible] = useState(false);
     const defRef = useRef(null);
@@ -18,16 +24,27 @@ export default function DefAndRaffContainer({
         setDefVisible(!defVisible);
     };
 
+    let searchRaffinement = (term) => {
+        console.log(term);
+        dataRetriver.getTerm(term.replaceAll("'", ""), currentType, (data) => {
+            changeRaffTerm({ ...data, typeId: currentType });
+        });
+    };
+
     return (
         <div>
             <div className="wordTitle">
-                <h1>{word}</h1>
+                <h1>{word + (raffTerm !== "" ? ` (${raffTerm})` : "")}</h1>
             </div>
             <div className="raffinementsContainer">
                 <p>Raffinement lié : </p>
                 <div className="raffinementElems">
                     {raffinements.map((raff) => (
-                        <div key={raff.word} className="raffElem">
+                        <div
+                            key={raff.word}
+                            className="raffElem"
+                            onClick={() => searchRaffinement(raff.word)}
+                        >
                             <p>{raff.word}</p>
                         </div>
                     ))}
@@ -61,3 +78,24 @@ export default function DefAndRaffContainer({
         </div>
     );
 }
+
+const mapStateToProps = ({ searchWord }) => {
+    return {
+        raffTerm: searchWord.raffTerm,
+        word: searchWord.currentWord,
+        raffinements: searchWord.raffinements,
+        definitions: searchWord.defs,
+        currentType: searchWord.currentType,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeRaffTerm: (term) => dispatch(changeRaffTerm(term)),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DefAndRaffContainer);

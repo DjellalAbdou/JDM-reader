@@ -6,6 +6,7 @@ import {
     CHANGE_PAGE,
     CHANGE_FILTER,
     CHANGE_TERM_FILTER,
+    CHANGE_RAFF_TERM,
 } from "../actions/types";
 import idRelations from "../../assets/id_relation.json";
 
@@ -24,6 +25,7 @@ const INITIAL_STATE = {
     outEntities: [],
     inToShow: [],
     outToShow: [],
+    raffTerm: "",
 };
 
 const searchWord = (state = INITIAL_STATE, action) => {
@@ -43,15 +45,16 @@ const searchWord = (state = INITIAL_STATE, action) => {
                 outEntities: [...action.payload.relation.out],
                 inToShow: sortEntities(
                     [...action.payload.relation.in].slice(0, 100),
-                    "Alpha"
+                    state.filter
                 ),
                 outToShow: sortEntities(
                     [...action.payload.relation.out].slice(0, 100),
-                    "Alpha"
+                    state.filter
                 ),
                 termFilter: "",
                 pageIn: 0,
                 pageOut: 0,
+                raffTerm: "",
             };
         case CHANGE_SEARCHING:
             return {
@@ -98,6 +101,7 @@ const searchWord = (state = INITIAL_STATE, action) => {
                 outToShow: sortEntities([...state.outToShow], action.payload),
             };
         case CHANGE_TERM_FILTER:
+            console.log(state.inToShow);
             return {
                 ...state,
                 termFilter: action.payload,
@@ -115,6 +119,38 @@ const searchWord = (state = INITIAL_STATE, action) => {
                     ),
                     action.payload
                 ),
+            };
+        case CHANGE_RAFF_TERM:
+            console.log("am hereeeee damn mother fucker");
+            let key = idRelations[action.payload.typeId].key;
+            console.log(action.payload);
+            console.log(key);
+            return {
+                ...state,
+                raffTerm: action.payload.word,
+                relations: {
+                    ...state.relations,
+                    [key]: action.payload[key],
+                },
+                inEntities: action.payload[key]
+                    ? [...action.payload[key].in]
+                    : [],
+                outEntities: action.payload[key]
+                    ? [...action.payload[key].out]
+                    : [],
+                inToShow: action.payload[key]
+                    ? sortEntities(
+                          [...action.payload[key].in].slice(0, 100),
+                          state.filter
+                      )
+                    : [],
+                outToShow: action.payload[key]
+                    ? sortEntities(
+                          [...action.payload[key].out].slice(0, 100),
+                          state.filter
+                      )
+                    : [],
+                currentType: action.payload.typeId,
             };
         default:
             return state;

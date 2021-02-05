@@ -5,7 +5,9 @@ const relationId = require("../assets/id_relation.json");
 
 module.exports = (app, scrapper, linker) => {
     app.get(`${keys.API}find`, async (req, res) => {
-        let word = req.query.word.toLowerCase();
+        let word = req.query.word;
+
+        if (!/.*>.*:/.test(word)) word = word.toLowerCase();
         let type = req.query.type;
 
         debug("current word is : " + word);
@@ -14,7 +16,9 @@ module.exports = (app, scrapper, linker) => {
                 res.send(await deleteUnnecessaryKeys(result, type));
             } else {
                 scrapper.executeScrapper(word, type, async (result) => {
-                    res.send(await deleteUnnecessaryKeys(result, type));
+                    if (result.error) {
+                        res.send(result);
+                    } else res.send(await deleteUnnecessaryKeys(result, type));
                 });
             }
         });

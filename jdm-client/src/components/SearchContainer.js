@@ -8,6 +8,7 @@ import RelationTypesContainer from "./RelationTypesContainer";
 import { connect } from "react-redux";
 import {
     changeFilter,
+    changeRaffTerm,
     changeTermFilter,
     changeType,
     changeWordRes,
@@ -50,8 +51,6 @@ class SearchContainer extends Component {
     searchWord = (e) => {
         if (!this.props.filter) {
             if (!Number.isInteger(e)) e.preventDefault();
-            console.log(this.state.searchTerm);
-            console.log(this.state.relation);
             if (this.state.searchTerm !== "") {
                 dataRetriver.getTerm(
                     this.state.searchTerm,
@@ -71,17 +70,27 @@ class SearchContainer extends Component {
                 .sort((a, b) => parseInt(b.w) - parseInt(a.w)),
             relation: res[idRelations[this.state.relation].key],
         };
-        console.log(obj);
         this.props.handleSearchTerm(obj);
         this.changeAutoCompVisibility(false);
     };
 
     changeRelation = (id) => {
-        this.setState({ relation: id });
-        console.log(id);
-        this.props.handleChangeType(id);
-        this.searchWord(parseInt(id));
-        //console.log(id);
+        if (this.props.raffTerm !== "") {
+            dataRetriver.getTerm(
+                this.props.raffTerm.replaceAll("'", ""),
+                id,
+                (data) => {
+                    let newobj = { ...data, typeId: parseInt(id) };
+                    console.log(newobj);
+                    this.props.changeRaffTerm(newobj);
+                    this.setState({ relation: id });
+                }
+            );
+        } else {
+            this.props.handleChangeType(id);
+            this.searchWord(parseInt(id));
+            this.setState({ relation: id });
+        }
     };
 
     changeRelationModalVisibility = (bool) => {
@@ -209,6 +218,7 @@ const mapStateToProps = ({ searchWord }) => {
         defs: searchWord.defs,
         relations: searchWord.relations,
         termFilter: searchWord.termFilter,
+        raffTerm: searchWord.raffTerm,
     };
 };
 
@@ -218,6 +228,7 @@ const mapDispatchToProps = (dispatch) => {
         handleChangeType: (typeid) => dispatch(changeType(typeid)),
         changeFilter: (filter) => dispatch(changeFilter(filter)),
         changeTermFilter: (term) => dispatch(changeTermFilter(term)),
+        changeRaffTerm: (term) => dispatch(changeRaffTerm(term)),
     };
 };
 

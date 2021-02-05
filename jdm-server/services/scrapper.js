@@ -37,42 +37,59 @@ Scrapper = function () {
 
             data = this.convertToUtf8(rawData);
 
-            let wordObject = {
-                word: word,
-                eid: Number(code.split("(eid=")[1].split(")")[0]),
-                def: [],
-                r_raff_sem: { in: [], out: [] },
-                nodes: [],
-                relations: [],
-            };
+            console.log(code === undefined, code === null, code === "");
 
-            let defArray = def.split(/\n[0-9]+. /);
-            defArray.map((elem) => {
-                if (!/^\n*$/.test(elem)) {
-                    wordObject.def.push(elem.trim());
-                }
-            });
+            // word doesnt exist
+
+            if (code !== "") {
+                let wordObject = {
+                    word: word,
+                    eid: Number(code.split("(eid=")[1].split(")")[0]),
+                    def: [],
+                    r_raff_sem: { in: [], out: [] },
+                    nodes: [],
+                    relations: [],
+                };
+
+                let defArray = def.split(/\n[0-9]+. /);
+                defArray.map((elem) => {
+                    if (!/^\n*$/.test(elem)) {
+                        wordObject.def.push(elem.trim());
+                    }
+                });
+                /**
+                 * website of jdm is crazy
+                 * sometimes it shows all the relations
+                 * sometimes it shows just one relation
+                 * depending on the word
+                 * so we need to scrap all the in or out relations
+                 * basiclly wtf
+                 * */
+                await this.scrapRelationType(word, wordObject, 1, false, true);
+                await this.scrapRelationType(
+                    word,
+                    wordObject,
+                    type,
+                    false,
+                    false
+                );
+                await this.scrapRelationType(
+                    word,
+                    wordObject,
+                    type,
+                    false,
+                    true
+                );
+                db.save(wordObject);
+                _cb(wordObject);
+            } else {
+                _cb({ error: 404, msg: "word doesn't exist" });
+            }
 
             // this line to scrap all infos relations and entities...
             //this.scrapAllInfo(code, wordObject);
             /*if (wordObject.r_raff_sem.length == 0)
                 await this.scrapRelationType(word, wordObject, 1, false, true);*/
-
-            /**
-             * website of jdm is crazy
-             * sometimes it shows all the relations
-             * sometimes it shows just one relation
-             * depending on the word
-             * so we need to scrap all the in or out relations
-             * basiclly wtf
-             * */
-            await this.scrapRelationType(word, wordObject, 1, false, true);
-            await this.scrapRelationType(word, wordObject, type, false, false);
-            await this.scrapRelationType(word, wordObject, type, false, true);
-
-            db.save(wordObject);
-
-            _cb(wordObject);
         } catch (err) {
             console.log(err);
             _cb({ error: true, obj: err });
