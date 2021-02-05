@@ -16,7 +16,7 @@ DBGenerator = function () {
             let bulk = Terms.collection.initializeOrderedBulkOp();
             let counter = 0;
 
-            terms.map((term) => {
+            terms.map((term, index) => {
                 //console.log(term);
                 let termDetails = term.split(";");
                 bulk.insert({
@@ -26,6 +26,7 @@ DBGenerator = function () {
                 counter++;
 
                 if (counter % 1000 == 0) {
+                    console.log(index);
                     bulk.execute(function (err, result) {
                         bulk = Terms.collection.initializeOrderedBulkOp();
                     });
