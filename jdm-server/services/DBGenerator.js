@@ -6,39 +6,43 @@ const jsn = require("../assets/id_relation.json");
 DBGenerator = function () {
     this.addFullTerms = async function () {
         console.log(process.cwd());
-        fs.readFile("./assets/termsList.txt", "utf8", (err, data) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            let regex = /([0-9]+;[a-zA-ZÀ-ÿ-. ]+;)/gm;
-            let terms = data.match(regex);
-            let bulk = Terms.collection.initializeOrderedBulkOp();
-            let counter = 0;
+        fs.readFile(
+            process.cwd + "/assets/termsList.txt",
+            "utf8",
+            (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                let regex = /([0-9]+;[a-zA-ZÀ-ÿ-. ]+;)/gm;
+                let terms = data.match(regex);
+                let bulk = Terms.collection.initializeOrderedBulkOp();
+                let counter = 0;
 
-            terms.map((term, index) => {
-                //console.log(term);
-                let termDetails = term.split(";");
-                bulk.insert({
-                    eid: termDetails[0],
-                    term: termDetails[1],
+                terms.map((term, index) => {
+                    //console.log(term);
+                    let termDetails = term.split(";");
+                    bulk.insert({
+                        eid: termDetails[0],
+                        term: termDetails[1],
+                    });
+                    counter++;
+
+                    if (counter % 1000 == 0) {
+                        console.log(index);
+                        bulk.execute(function (err, result) {
+                            bulk = Terms.collection.initializeOrderedBulkOp();
+                        });
+                    }
                 });
-                counter++;
 
-                if (counter % 1000 == 0) {
-                    console.log(index);
+                if (counter % 1000 != 0) {
                     bulk.execute(function (err, result) {
-                        bulk = Terms.collection.initializeOrderedBulkOp();
+                        console.log("finished loading data");
                     });
                 }
-            });
-
-            if (counter % 1000 != 0) {
-                bulk.execute(function (err, result) {
-                    console.log("finished loading data");
-                });
             }
-        });
+        );
     };
 
     this.isEmpty = function (obj) {
