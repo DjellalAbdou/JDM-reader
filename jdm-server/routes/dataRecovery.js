@@ -13,6 +13,15 @@ module.exports = (app, scrapper, linker) => {
         //debug("current word is : " + word);
         db.getWord(word, async (result) => {
             if (result != null) {
+                let specRelat = await getSpecifiedRelation(
+                    result,
+                    type,
+                    scrapper,
+                    word
+                );
+                if (result[relationId[type]] != undefined) {
+                    result[relationId[type]] = specRelat;
+                }
                 res.send(await deleteUnnecessaryKeys(result, type));
             } else {
                 scrapper.executeScrapper(word, type, async (result) => {
@@ -32,7 +41,8 @@ module.exports = (app, scrapper, linker) => {
     });
 
     app.get(`${keys.API}termRelation`, async (req, res) => {
-        let word = req.query.word.toLowerCase();
+        //let word = req.query.word.toLowerCase();
+        let word = req.query.word;
         let typeRelation = req.query.type;
 
         db.getWord(word, (result) => {
@@ -74,6 +84,38 @@ module.exports = (app, scrapper, linker) => {
         // if not parse !
     });
 };
+
+function getSpecifiedRelation(result, typeRelation, scrapper, word) {
+    return new Promise(async (resolve, reject) => {
+        if (result[relationId[typeRelation]] != undefined) {
+            resolve(result[relationId[typeRelation]]);
+        } else {
+            // call parser
+            scrapper.scrapRelationType(
+                word,
+                result,
+                typeRelation,
+                true,
+                true,
+                (ret) => {
+                    //console.log("out relations hahhahahahah");
+                    scrapper.scrapRelationType(
+                        word,
+                        result,
+                        typeRelation,
+                        true,
+                        false,
+                        (rt) => {
+                            // console.log("in relations hahhahahahah");
+                            return resolve(rt);
+                        }
+                    );
+                }
+            );
+            console.log("call scrapper");
+        }
+    });
+}
 
 function deleteUnnecessaryKeys(result, type) {
     return new Promise((resolve, reject) => {

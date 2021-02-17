@@ -151,7 +151,7 @@ Scrapper = function () {
                 resolve();
             } catch (err) {
                 console.log(err);
-                reject();
+                reject(false);
             }
         });
     };
